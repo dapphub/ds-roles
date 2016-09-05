@@ -10,7 +10,7 @@ The ability to check permissions in constant time is entirely due to
 the artificial constraint on number of roles.
 
 256 was chosen because this lets us abuse the large word size and
-cheap bitshift operations.
+cheap bitwise operations.
 
 
 Usage
@@ -43,10 +43,10 @@ role:
 
 ```
 bool is_owner = hasUserRole(owner_address, owner_role);
-bool is_user = hasUserRole(owner_address, owner_role);
+bool is_user = hasUserRole(owner_address, user_role);
 
-is_owner == true;
-is_user == false;
+assertTrue(is_owner);
+assertFalse(is_user);
 ```
 
 
