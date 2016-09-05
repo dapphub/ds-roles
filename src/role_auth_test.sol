@@ -41,5 +41,10 @@ contract DSRoleAuthTest is Test
 
 		r.setRoleCapability(admin_role, a, bytes4(sha3("cap1()")), false);
 		assertFalse(r.canCall(this, a, bytes4(sha3("cap1()"))));
+
+        assertTrue(r.hasUserRole(this, root_role));
+        assertTrue(r.hasUserRole(this, admin_role));
+        assertFalse(r.hasUserRole(this, mod_role));
+        assertFalse(r.hasUserRole(this, user_role));
 	}
 }

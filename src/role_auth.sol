@@ -55,4 +55,10 @@ contract DSRoleAuth is DSAuthority
         }
 
     }
+
+    function hasUserRole(address who, uint8 role) constant returns (bool) {
+        bytes32 roles = getUserRoles(who);
+        bytes32 shifted = bytes32(uint256(uint256(2) ** uint256(role)));
+        return bytes32(0) != roles & shifted;
+    }
 }
