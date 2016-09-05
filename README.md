@@ -4,7 +4,7 @@ ds-roles
 A `DSAuthority` that manages up to 256 **roles**.
 
 In the context of the Role Authority, a **user** is the sender,
-while a **capability** is a `(code,sig) :: (bytes32,bytes4)` pair.
+while a **capability** is a `(code,sig) :: (address,bytes4)` pair.
 
 The ability to check permissions in constant time is entirely due to
 the artificial constraint on number of roles.
@@ -35,7 +35,7 @@ setUserRole(user_address, user_role, true);
 The roles that an address has can be inspected, either all at once:
 
 ```
-bytes32 roles = getUserRole(user_address)
+bytes32 roles = getUserRoles(user_address)
 ```
 
 or, for convenience, by testing whether a given user has a given
