@@ -54,7 +54,7 @@ assertFalse(is_user);
 functions (by signature) at an address:
 
 ```
-address target = this;
+address target = 0x123;  // code address
 
 bytes4 withdraw_sig = bytes4(sha3("withdrawAll()"));
 setRoleCapability(owner_role, target, withdraw_sig);
