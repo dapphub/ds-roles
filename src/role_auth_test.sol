@@ -15,8 +15,7 @@ contract authed is DSAuth {
 	}
 }
 
-contract DSRoleAuthTest is Test
-						 , DSAuthUtils {
+contract DSRoleAuthTest is Test {
 	DSRoleAuth r;
 	authed a;
 	function setUp() {
