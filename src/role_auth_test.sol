@@ -22,6 +22,7 @@ contract DSRoleAuthTest is Test {
 		r = new DSRoleAuth();
 		a = new authed();
 	}
+
 	function testBasics() {
 		uint8 root_role = 0;
 		uint8 admin_role = 1;
@@ -43,9 +44,35 @@ contract DSRoleAuthTest is Test {
 		r.setRoleCapability(admin_role, a, bytes4(sha3("cap1()")), false);
 		assertFalse(r.canCall(this, a, bytes4(sha3("cap1()"))));
 
-        assertTrue(r.hasUserRole(this, root_role));
-        assertTrue(r.hasUserRole(this, admin_role));
-        assertFalse(r.hasUserRole(this, mod_role));
-        assertFalse(r.hasUserRole(this, user_role));
+		assertTrue(r.hasUserRole(this, root_role));
+		assertTrue(r.hasUserRole(this, admin_role));
+		assertFalse(r.hasUserRole(this, mod_role));
+		assertFalse(r.hasUserRole(this, user_role));
+	}
+
+	function testRoot() {
+		assertFalse(r.isUserRoot(this));
+		assertFalse(r.canCall(this, a, bytes4(sha3("cap1()"))));
+
+		r.setRootUser(this, true);
+		assertTrue(r.isUserRoot(this));
+		assertTrue(r.canCall(this, a, bytes4(sha3("cap1()"))));
+
+		r.setRootUser(this, false);
+		assertFalse(r.isUserRoot(this));
+		assertFalse(r.canCall(this, a, bytes4(sha3("cap1()"))));
+	}
+
+	function testPublicCapabilities() {
+		assertFalse(r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
+		assertFalse(r.canCall(this, a, bytes4(sha3("cap1()"))));
+
+		r.setPublicCapability(a, bytes4(sha3("cap1()")), true);
+		assertTrue(r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
+		assertTrue(r.canCall(this, a, bytes4(sha3("cap1()"))));
+
+		r.setPublicCapability(a, bytes4(sha3("cap1()")), false);
+		assertFalse(r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
+		assertFalse(r.canCall(this, a, bytes4(sha3("cap1()"))));
 	}
 }
