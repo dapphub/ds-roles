@@ -4,7 +4,7 @@ tags: []
 layout:
   sol_sources: ./src
   build_dir: ./build
-  packages_directory: ./.dapple/packages/
+  packages_directory: lib
 dependencies: {}
 ignore: []
 dapple_version: 0.8.39
