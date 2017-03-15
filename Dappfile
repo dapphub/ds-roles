@@ -1,19 +1,6 @@
-name: ds-roles
-version: 0.0.0-dev
-tags: []
-layout:
-  sol_sources: ./src
-  build_dir: ./build
-  packages_directory: lib
-dependencies: {}
-ignore: []
-dapple_version: 0.8.39
-description: ''
-authors: []
-license: Apache-2.0
-keywords:
-  - dapple
-environments:
-  develop:
-    objects: {}
-    type: internal
+name            ds-roles
+description
+version         0.0.1
+
+author          
+license         Apache-2.0
