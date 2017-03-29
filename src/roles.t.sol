@@ -2,7 +2,7 @@ pragma solidity ^0.4.8;
 
 import 'ds-test/test.sol';
 import 'ds-auth/auth.sol';
-import './role-auth.sol';
+import './roles.sol';
 
 contract authed is DSAuth {
 	bool public flag1;
@@ -15,11 +15,11 @@ contract authed is DSAuth {
 	}
 }
 
-contract DSRoleAuthTest is DSTest {
-	DSRoleAuth r;
+contract DSRolesTest is DSTest {
+	DSRoles r;
 	authed a;
 	function setUp() {
-		r = new DSRoleAuth();
+		r = new DSRoles();
 		a = new authed();
 	}
 

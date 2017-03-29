@@ -2,7 +2,7 @@ pragma solidity ^0.4.8;
 
 import 'ds-auth/auth.sol';
 
-contract DSRoleAuth is DSAuth, DSAuthority
+contract DSRoles is DSAuth, DSAuthority
 {
     mapping(address=>bool) _root_users;
     mapping(address=>bytes32) _user_roles;
