@@ -20,8 +20,8 @@ contract DSRoles is DSAuth, DSAuthority
 {
     mapping(address=>bool) _root_users;
     mapping(address=>bytes32) _user_roles;
-    mapping(address=>mapping(bytes32=>bytes32)) _capability_roles;
-    mapping(address=>mapping(bytes32=>bool)) _public_capabilities;
+    mapping(address=>mapping(bytes4=>bytes32)) _capability_roles;
+    mapping(address=>mapping(bytes4=>bool)) _public_capabilities;
 
     function getUserRoles(address who)
         constant
@@ -30,14 +30,14 @@ contract DSRoles is DSAuth, DSAuthority
         return _user_roles[who];
     }
 
-    function getCapabilityRoles(address code, bytes32 sig)
+    function getCapabilityRoles(address code, bytes4 sig)
         constant
         returns (bytes32)
     {
         return _capability_roles[code][sig];
     }
     
-    function permitted(address caller, address code, bytes32 sig)
+    function canCall(address caller, address code, bytes4 sig)
         constant
         returns (bool)
     {
@@ -69,13 +69,13 @@ contract DSRoles is DSAuth, DSAuthority
         }
     }
 
-    function setPublicCapability(address code, bytes32 sig, bool enabled)
+    function setPublicCapability(address code, bytes4 sig, bool enabled)
         auth
     {
         _public_capabilities[code][sig] = enabled;
     }
 
-    function setRoleCapability(uint8 role, address code, bytes32 sig, bool enabled)
+    function setRoleCapability(uint8 role, address code, bytes4 sig, bool enabled)
         auth
     {
         var last_roles = _capability_roles[code][sig];
@@ -95,7 +95,7 @@ contract DSRoles is DSAuth, DSAuthority
         return _root_users[who];
     }
 
-    function isCapabilityPublic(address code, bytes32 sig) 
+    function isCapabilityPublic(address code, bytes4 sig) 
         constant
         returns (bool)
     {
