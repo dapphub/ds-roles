@@ -48,15 +48,15 @@ contract DSRolesTest is DSTest {
 
 		assertEq32(bytes32(0x3), r.getUserRoles(this));
 
-		r.setRoleCapability(admin_role, a, bytes4(sha3("cap1()")), true);
+		r.setRoleCapability(admin_role, a, sha3("cap1()"), true);
 
-		assert(r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assert(r.permitted(this, a, sha3("cap1()")));
 		a.cap1();
 		assert(a.flag1());
 	
 
-		r.setRoleCapability(admin_role, a, bytes4(sha3("cap1()")), false);
-		assert(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		r.setRoleCapability(admin_role, a, sha3("cap1()"), false);
+		assert(!r.permitted(this, a, sha3("cap1()")));
 
 		assert(r.hasUserRole(this, root_role));
 		assert(r.hasUserRole(this, admin_role));
@@ -66,27 +66,27 @@ contract DSRolesTest is DSTest {
 
 	function testRoot() {
 		assert(!r.isUserRoot(this));
-		assert(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assert(!r.permitted(this, a, sha3("cap1()")));
 
 		r.setRootUser(this, true);
 		assert(r.isUserRoot(this));
-		assert(r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assert(r.permitted(this, a, sha3("cap1()")));
 
 		r.setRootUser(this, false);
 		assert(!r.isUserRoot(this));
-		assert(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assert(!r.permitted(this, a, sha3("cap1()")));
 	}
 
 	function testPublicCapabilities() {
-		assert(!r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
-		assert(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assert(!r.isCapabilityPublic(a, sha3("cap1()")));
+		assert(!r.permitted(this, a, sha3("cap1()")));
 
-		r.setPublicCapability(a, bytes4(sha3("cap1()")), true);
-		assert(r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
-		assert(r.canCall(this, a, bytes4(sha3("cap1()"))));
+		r.setPublicCapability(a, sha3("cap1()"), true);
+		assert(r.isCapabilityPublic(a, sha3("cap1()")));
+		assert(r.permitted(this, a, sha3("cap1()")));
 
-		r.setPublicCapability(a, bytes4(sha3("cap1()")), false);
-		assert(!r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
-		assert(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		r.setPublicCapability(a, sha3("cap1()"), false);
+		assert(!r.isCapabilityPublic(a, sha3("cap1()")));
+		assert(!r.permitted(this, a, sha3("cap1()")));
 	}
 }
