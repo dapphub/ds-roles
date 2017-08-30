@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.13;
 
 import 'ds-test/test.sol';
 import 'ds-auth/auth.sol';
@@ -50,43 +50,43 @@ contract DSRolesTest is DSTest {
 
 		r.setRoleCapability(admin_role, a, bytes4(sha3("cap1()")), true);
 
-		assert(r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(r.canCall(this, a, bytes4(sha3("cap1()"))));
 		a.cap1();
-		assert(a.flag1());
+		assertTrue(a.flag1());
 	
 
 		r.setRoleCapability(admin_role, a, bytes4(sha3("cap1()")), false);
-		assert(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(!r.canCall(this, a, bytes4(sha3("cap1()"))));
 
-		assert(r.hasUserRole(this, root_role));
-		assert(r.hasUserRole(this, admin_role));
-		assert(!r.hasUserRole(this, mod_role));
-		assert(!r.hasUserRole(this, user_role));
+		assertTrue(r.hasUserRole(this, root_role));
+		assertTrue(r.hasUserRole(this, admin_role));
+		assertTrue(!r.hasUserRole(this, mod_role));
+		assertTrue(!r.hasUserRole(this, user_role));
 	}
 
 	function testRoot() {
-		assert(!r.isUserRoot(this));
-		assert(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(!r.isUserRoot(this));
+		assertTrue(!r.canCall(this, a, bytes4(sha3("cap1()"))));
 
 		r.setRootUser(this, true);
-		assert(r.isUserRoot(this));
-		assert(r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(r.isUserRoot(this));
+		assertTrue(r.canCall(this, a, bytes4(sha3("cap1()"))));
 
 		r.setRootUser(this, false);
-		assert(!r.isUserRoot(this));
-		assert(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(!r.isUserRoot(this));
+		assertTrue(!r.canCall(this, a, bytes4(sha3("cap1()"))));
 	}
 
 	function testPublicCapabilities() {
-		assert(!r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
-		assert(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(!r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
+		assertTrue(!r.canCall(this, a, bytes4(sha3("cap1()"))));
 
 		r.setPublicCapability(a, bytes4(sha3("cap1()")), true);
-		assert(r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
-		assert(r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
+		assertTrue(r.canCall(this, a, bytes4(sha3("cap1()"))));
 
 		r.setPublicCapability(a, bytes4(sha3("cap1()")), false);
-		assert(!r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
-		assert(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(!r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
+		assertTrue(!r.canCall(this, a, bytes4(sha3("cap1()"))));
 	}
 }
