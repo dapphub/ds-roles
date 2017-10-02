@@ -21,10 +21,10 @@ import './roles.sol';
 contract authed is DSAuth {
 	bool public flag1;
 	bool public flag2;
-	function cap1() auth {
+	function cap1() public auth {
 		flag1 = true;
 	}
-	function cap2() auth {
+	function cap2() public auth {
 		flag2 = true;
 	}
 }
@@ -32,12 +32,12 @@ contract authed is DSAuth {
 contract DSRolesTest is DSTest {
 	DSRoles r;
 	authed a;
-	function setUp() {
+	function setUp() public {
 		r = new DSRoles();
 		a = new authed();
 	}
 
-	function testBasics() {
+	function testBasics() public {
 		uint8 root_role = 0;
 		uint8 admin_role = 1;
 		uint8 mod_role = 2;
@@ -48,15 +48,15 @@ contract DSRolesTest is DSTest {
 
 		assertEq32(bytes32(0x3), r.getUserRoles(this));
 
-		r.setRoleCapability(admin_role, a, bytes4(sha3("cap1()")), true);
+		r.setRoleCapability(admin_role, a, bytes4(keccak256("cap1()")), true);
 
-		assertTrue(r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(r.canCall(this, a, bytes4(keccak256("cap1()"))));
 		a.cap1();
 		assertTrue(a.flag1());
 	
 
-		r.setRoleCapability(admin_role, a, bytes4(sha3("cap1()")), false);
-		assertTrue(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		r.setRoleCapability(admin_role, a, bytes4(keccak256("cap1()")), false);
+		assertTrue(!r.canCall(this, a, bytes4(keccak256("cap1()"))));
 
 		assertTrue(r.hasUserRole(this, root_role));
 		assertTrue(r.hasUserRole(this, admin_role));
@@ -64,29 +64,29 @@ contract DSRolesTest is DSTest {
 		assertTrue(!r.hasUserRole(this, user_role));
 	}
 
-	function testRoot() {
+	function testRoot() public {
 		assertTrue(!r.isUserRoot(this));
-		assertTrue(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(!r.canCall(this, a, bytes4(keccak256("cap1()"))));
 
 		r.setRootUser(this, true);
 		assertTrue(r.isUserRoot(this));
-		assertTrue(r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(r.canCall(this, a, bytes4(keccak256("cap1()"))));
 
 		r.setRootUser(this, false);
 		assertTrue(!r.isUserRoot(this));
-		assertTrue(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		assertTrue(!r.canCall(this, a, bytes4(keccak256("cap1()"))));
 	}
 
-	function testPublicCapabilities() {
-		assertTrue(!r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
-		assertTrue(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+	function testPublicCapabilities() public {
+		assertTrue(!r.isCapabilityPublic(a, bytes4(keccak256("cap1()"))));
+		assertTrue(!r.canCall(this, a, bytes4(keccak256("cap1()"))));
 
-		r.setPublicCapability(a, bytes4(sha3("cap1()")), true);
-		assertTrue(r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
-		assertTrue(r.canCall(this, a, bytes4(sha3("cap1()"))));
+		r.setPublicCapability(a, bytes4(keccak256("cap1()")), true);
+		assertTrue(r.isCapabilityPublic(a, bytes4(keccak256("cap1()"))));
+		assertTrue(r.canCall(this, a, bytes4(keccak256("cap1()"))));
 
-		r.setPublicCapability(a, bytes4(sha3("cap1()")), false);
-		assertTrue(!r.isCapabilityPublic(a, bytes4(sha3("cap1()"))));
-		assertTrue(!r.canCall(this, a, bytes4(sha3("cap1()"))));
+		r.setPublicCapability(a, bytes4(keccak256("cap1()")), false);
+		assertTrue(!r.isCapabilityPublic(a, bytes4(keccak256("cap1()"))));
+		assertTrue(!r.canCall(this, a, bytes4(keccak256("cap1()"))));
 	}
 }
