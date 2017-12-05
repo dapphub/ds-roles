@@ -26,7 +26,7 @@ contract DSRoles is DSAuth, DSAuthority
     mapping(address=>mapping(bytes4=>bytes32)) _capability_roles;
     mapping(address=>mapping(bytes4=>bool)) _public_capabilities;
 
-    function getUserRoles(address who)
+    function acts(address who)
         public
         view
         returns (bytes32)
@@ -34,7 +34,7 @@ contract DSRoles is DSAuth, DSAuthority
         return _user_roles[who];
     }
 
-    function getCapabilityRoles(address code, bytes4 sig)
+    function does(address code, bytes4 sig)
         public
         view
         returns (bytes32)
@@ -42,7 +42,7 @@ contract DSRoles is DSAuth, DSAuthority
         return _capability_roles[code][sig];
     }
 
-    function isUserRoot(address who)
+    function root(address who)
         public
         view
         returns (bool)
@@ -50,7 +50,7 @@ contract DSRoles is DSAuth, DSAuthority
         return _root_users[who];
     }
 
-    function isCapabilityPublic(address code, bytes4 sig)
+    function open(address code, bytes4 sig)
         public
         view
         returns (bool)
@@ -58,7 +58,7 @@ contract DSRoles is DSAuth, DSAuthority
         return _public_capabilities[code][sig];
     }
 
-    function hasUserRole(address who, uint8 role)
+    function acts(address who, uint8 role)
         public
         view
         returns (bool)
@@ -86,14 +86,14 @@ contract DSRoles is DSAuth, DSAuthority
         return (input ^ bytes32(uint(-1)));
     }
 
-    function setRootUser(address who, bool enabled)
+    function root(address who, bool enabled)
         public
         auth
     {
         _root_users[who] = enabled;
     }
 
-    function setUserRole(address who, uint8 role, bool enabled)
+    function acts(address who, uint8 role, bool enabled)
         public
         auth
     {
@@ -106,14 +106,14 @@ contract DSRoles is DSAuth, DSAuthority
         }
     }
 
-    function setPublicCapability(address code, bytes4 sig, bool enabled)
+    function open(address code, bytes4 sig, bool enabled)
         public
         auth
     {
         _public_capabilities[code][sig] = enabled;
     }
 
-    function setRoleCapability(uint8 role, address code, bytes4 sig, bool enabled)
+    function does(uint8 role, address code, bytes4 sig, bool enabled)
         public
         auth
     {
