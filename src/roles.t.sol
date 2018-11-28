@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity ^0.4.13;
+pragma solidity >0.4.23;
 
 import 'ds-test/test.sol';
 import 'ds-auth/auth.sol';
@@ -34,10 +34,12 @@ contract authed is DSAuth {
 
 contract DSRolesTest is DSTest {
 	DSRoles r;
-	authed a;
+	address a;
+    address self;
 	function setUp() public {
 		r = new DSRoles();
-		a = new authed();
+		a = address(new authed());
+        self = address(this);
 	}
 
 	function testBasics() public {
@@ -46,50 +48,50 @@ contract DSRolesTest is DSTest {
 		uint8 mod_role = 2;
 		uint8 user_role = 3;
 
-		r.setUserRole(this, root_role, true);
-		r.setUserRole(this, admin_role, true);
+		r.setUserRole(self, root_role, true);
+		r.setUserRole(self, admin_role, true);
 
-		assertEq32(bytes32(0x3), r.getUserRoles(this));
+		assertEq32(bytes32(hex"0000000000000000000000000000000000000000000000000000000000000003"), r.getUserRoles(self));
 
 		r.setRoleCapability(admin_role, a, bytes4(keccak256("cap1()")), true);
 
-		assertTrue(r.canCall(this, a, bytes4(keccak256("cap1()"))));
-		a.cap1();
-		assertTrue(a.flag1());
+		assertTrue(r.canCall(self, a, bytes4(keccak256("cap1()"))));
+		authed(a).cap1();
+		assertTrue(authed(a).flag1());
 	
 
 		r.setRoleCapability(admin_role, a, bytes4(keccak256("cap1()")), false);
-		assertTrue(!r.canCall(this, a, bytes4(keccak256("cap1()"))));
+		assertTrue(!r.canCall(self, a, bytes4(keccak256("cap1()"))));
 
-		assertTrue(r.hasUserRole(this, root_role));
-		assertTrue(r.hasUserRole(this, admin_role));
-		assertTrue(!r.hasUserRole(this, mod_role));
-		assertTrue(!r.hasUserRole(this, user_role));
+		assertTrue(r.hasUserRole(self, root_role));
+		assertTrue(r.hasUserRole(self, admin_role));
+		assertTrue(!r.hasUserRole(self, mod_role));
+		assertTrue(!r.hasUserRole(self, user_role));
 	}
 
 	function testRoot() public {
-		assertTrue(!r.isUserRoot(this));
-		assertTrue(!r.canCall(this, a, bytes4(keccak256("cap1()"))));
+		assertTrue(!r.isUserRoot(self));
+		assertTrue(!r.canCall(self, a, bytes4(keccak256("cap1()"))));
 
-		r.setRootUser(this, true);
-		assertTrue(r.isUserRoot(this));
-		assertTrue(r.canCall(this, a, bytes4(keccak256("cap1()"))));
+		r.setRootUser(self, true);
+		assertTrue(r.isUserRoot(self));
+		assertTrue(r.canCall(self, a, bytes4(keccak256("cap1()"))));
 
-		r.setRootUser(this, false);
-		assertTrue(!r.isUserRoot(this));
-		assertTrue(!r.canCall(this, a, bytes4(keccak256("cap1()"))));
+		r.setRootUser(self, false);
+		assertTrue(!r.isUserRoot(self));
+		assertTrue(!r.canCall(self, a, bytes4(keccak256("cap1()"))));
 	}
 
 	function testPublicCapabilities() public {
 		assertTrue(!r.isCapabilityPublic(a, bytes4(keccak256("cap1()"))));
-		assertTrue(!r.canCall(this, a, bytes4(keccak256("cap1()"))));
+		assertTrue(!r.canCall(self, a, bytes4(keccak256("cap1()"))));
 
 		r.setPublicCapability(a, bytes4(keccak256("cap1()")), true);
 		assertTrue(r.isCapabilityPublic(a, bytes4(keccak256("cap1()"))));
-		assertTrue(r.canCall(this, a, bytes4(keccak256("cap1()"))));
+		assertTrue(r.canCall(self, a, bytes4(keccak256("cap1()"))));
 
 		r.setPublicCapability(a, bytes4(keccak256("cap1()")), false);
 		assertTrue(!r.isCapabilityPublic(a, bytes4(keccak256("cap1()"))));
-		assertTrue(!r.canCall(this, a, bytes4(keccak256("cap1()"))));
+		assertTrue(!r.canCall(self, a, bytes4(keccak256("cap1()"))));
 	}
 }
